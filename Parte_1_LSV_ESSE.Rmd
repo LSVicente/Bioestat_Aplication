@@ -1,0 +1,1642 @@
+---
+title: "Bioestatística"
+subtitle: "" 
+author: Letícia da Silva Vicente (Monitor)  <br> Davi da S. B. Alves (Orientador) <br>
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+<div style="border:1px solid #020202;"><br><center>![](https://github.com/LeticiaVicente/LSVAplic/blob/master/logo_unirio.png?raw=true)</center><br></div>
+
+<style type="text/css">
+  body {
+  font-family: arial;
+    color: #020202;
+    background-color: #ffffff;
+    #.border {border:1px solid #020202;};
+    border-width: 1px;
+    line-height: 1.5;
+    text-align:justify;
+    }
+</style>
+
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+load("hiperdia.RData")
+#data(hiperdia)
+hiperdia <- data.frame(hiperdia)
+names(hiperdia)[1]<-"Esc"
+hiperdia$hipertenso_fator <- NULL
+hiperdia$esc_fator <- NULL
+checa_codigo <- function(label, user_code, check_code, envir_result, evaluate_result, last_value, ...) {
+  # this is a fully evaluated chunk check
+  user <- trimws(as.character(user_code))
+  check <- trimws(as.character(check_code))
+  if (user==check) {
+    return(list(message = "Muito bem! Você está no caminho certo!", correct = TRUE))
+  }
+  list(message = "Não é esta a resposta. Mas não desista, tente novamente!", correct = FALSE, location = "append")
+}
+
+tutorial_options(exercise.checker = checa_codigo)
+
+```
+
+## **O Início da Jornada**
+
+<center>
+```{r, echo=FALSE, out.width = '40%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/start.gif?raw=true")
+```
+</center>
+
+### **Apresentação**
+
+Esta plataforma está sendo desenvolvido pela aluna Bolsista do Projeto de Monitoria da Disciplina de Bioestatística para o curso de Enfermagem, Letícia da Silva Vicente, e pelo professor responsável pela disciplina, Davi da Silveira Barroso Alves, do Departamento de Métodos Quantitativos (DMQ) da Universidade Federal do Estado do Rio de Janeiro (UNIRIO), durante o ano de 2020.
+
+A plataforma foi elaborada com o intuito de facilitar a aprendizagem da linguagem R utilizada durante a disciplina para implementar práticas de análises de dados, de uma maneira interativa e amigável, com a possibilidade de ser acessada de qualquer dispositivo com um navegador e acesso a internet.
+
+Nesta plataforma o conteúdo apresentado na [apostila](https://drive.google.com/file/d/1fCjMVmPKj85OReErWluQm0VD0oYC63Z7/view?usp=sharing) de R Commander, do Professor Felipe Rafael Melo do DMQ-UNIRIO - utilizada como referência para as aulas práticas - será complementado e adaptado, apresentando os procedimentos através de linhas de comando, que poderão ser treinados e implementados na própria plataforma.
+
+Para usuários que não têm acesso a um PC com Linux, MacOS ou Windows e por isso não poderão instalar o software R, sugerimos a utilização do plano gratuito do [RStudio Cloud](https://rstudio.cloud/).
+
+## **Preparativos** 
+
+A seguir detalharemos os procedimentos para instalação do *R*, do *RStudio* e do *R Commander*, sendo necessário estar conectado à internet. O tempo para a realização do processo pode variar, de acordo com a velocidade da conexão.
+
+  >  *„Batatinha quando nasce espalha rama pelo chão,internet quando cai, faz parar o coração“*    —  desconhecido 
+
+<center>
+```{r, echo=FALSE, out.width = '20%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/tempo.gif?raw=true")
+```
+</center>
+  
+#### **Instalando o R**
+
+Para instalar é necessário fazer o download da aplicação em um computador que tenha como sistema operacional alguma distro Linux, MacOS ou Windows, pelo site https://cran.fiocruz.br/.
+
+1. Selecione o sistema operacional em “Download and Install R”
+2. Selecione “install R for the first time”
+3. Clique em “Download R” para baixar o instalador
+4. Aguarde o término do Download. Pode demorar um pouquinho a depender da sua conexão com a internet.
+5. Pronto! Agora é só instalar o programa no seu computador, abrindo o instalador que foi baixado
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Instalando_R.gif?raw=true")
+```
+
+#### **Instalando o R Commander**
+
+O R Commander é um pacote que pode ser instalado e acessado dentro do software R e permite usar os recursos do R através de uma interface de apontar e clicar. O procedimento para  a instalação do R Commander por meio de janelas, está detalhado na [apostila](https://drive.google.com/file/d/1fCjMVmPKj85OReErWluQm0VD0oYC63Z7/view?usp=sharing), na página 05.
+
+Para a Instalação do pacote Rcmdr por linha de comando, utilize os seguintes passos:
+
+1. Abra o software R
+2. Na janela *"R Console"*, digite o comando ```install.packages("Rcmdr",dependencies = T)```, e pressione "Enter" no teclado
+3. Caso abra uma janela para a seleção do *CRAN mirror* (ou *espelho CRAN*) para realizar o download. Essa é a fonte de onde os arquivos serão baixados e instalados diretamente pelo R. Escolha a opção **"0-Cloud[https]"** e clique em Ok
+4. Aguarde até que todos os pacotes necessários sejam instalados. Este procedimento pode demorar um pouco!
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Instalando_Rcmdr.gif?raw=true")
+```
+
+Após a instalação do pacote, para abrir o R Commander utilize o comando ```library(Rcmdr)``` 
+
+#### **Instalando o R-Studio**
+
+Reforçamos que esta plataforma terá foco no uso do R por linha de comando, de maneira complementar ao uso do R Commander como apresentado na [apostila](https://drive.google.com/file/d/1fCjMVmPKj85OReErWluQm0VD0oYC63Z7/view?usp=sharing).
+
+O R Studio é uma interface gráfica mais amigável para o R e oferece recursos mais avançados. É necessário ter o R instalado para conseguir fazer uso do R Studio. Após a instalação do R, conforme detalhada anteriormente, faça o download e instale o aplicativo RStudio neste link: https://rstudio.com/products/rstudio/download/.
+
+1. Para instalar o RStudio, vá ao endereço: https://www.rstudio.com e pressione o botão "Download"
+2. A página vai mudar e aparecerá a opção  "RStudio Desktop". Aperte "Download"
+3. Então nessa nova página é só localizar "Download RStudio for windows" e fazer o download
+4. Assim o carregamento do arquivo para a sua máquina irá começar. É só esperar o término do download e instalar
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Instalando_R.gif?raw=true")
+```
+
+### **RStudio Cloud**
+
+Essa é uma interface online que não requer que RStudio esteja instalado na máquina, mas funciona praticamente da mesma maneira! Criando uma conta, você pode optar pelo plano gratuito, que será suficiente para as análises realizadas ao longo da disciplina.
+
+Este é o passo a passo para criar a sua conta:
+
+1. Acesse "https://rstudio.cloud/" e clique em "Get Started".  
+2. A página para selecionar o plano para utilizar a plataforma do RCloud Studio vai aparecer, é só selecionar o plano "Cloud Free", que é gratuito, e então "Sign up".  
+3. Agora é só se cadastrar para fazer a inscrição: **Email  &#8594;  Senha &#8594; Primeiro Nome &#8594; Sobrenome &#8594; "Sign up"**  
+4. A seguinte página vai aparecer, para começar a usar a plataforma localize "New Project" a direita para criar um projeto novo.  
+5. Pode demorar um pouquinho para carregar o projeto, mas é só esperar até sumir o "Deploying Project"  
+6. Pronto! Você está com um RStudio que pode usar em qualquer dispositivo com internet!
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Preparando_RStudioCloud.gif?raw=true")
+```
+
+### **A Interface do RStudio e do RStudiocloud**   
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Interface_RStudio.gif?raw=true")
+```
+
+**ATENÇÃO:** A interface do RStudio Cloud é quase idêntica à do RStudio instalado no PC. Para carregar arquivos no RStudio Cloud é necessário fazer o upload dos arquivos na guia *Files* em *upload*.
+
+### **A Interface do RStudio Cloud**  
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Interface_RStudioCloud.gif?raw=true")
+```
+
+## Carregando o Banco
+
+### **Mudando o Diretório**
+
+Antes de falar do carregamento de bancos de dados, vamos abordar o conceito de *Diretório de Trabalho* no R. Verificar e alterar o diretório de trabalho é uma etapa muito importante e deve ser feita todas as vezes que iniciar uma análise de dados no R.
+
+O Diretório de trabalho é muito importante no R, pois é lá que os arquivos e as planilhas deverão estar salvas para ser acessadas pelo software. Também é neste diretório que os arquivos gerados durante as análises serão salvos.
+
+Para checar qual o diretório de trabalho está em uso pelo R, podemos utilizar o comando ```getwd()```
+
+Para alterar o diretório de trabalho no R Commander, clicando em **"Arquivo" &#8594; "Altere o Diretório de Trabalho"**.
+
+Se você quiser mudar de diretório no RStudio, na barra principal de ferramentas, vá em  
+**"Session" &#8594; "Set Working Directory" &#8594; "Choose Directory" &#8594; E localizar a pasta de escolha.**
+
+Também é possível definir o *Diretório* no console, pelo comando ```setwd("Diretorio")```, como por exemplo:
+
+    setwd("C:/Documentos/Trabalho de Bioestatística")  
+
+**Atenção:** Sempre que for digitar um diretório do computador em que se encontra um arquivo, utilize */* para separar os diretórios ou *\\*. Não use de *\*, como é o padrão de navegação reconhecido pelo R:
+
+***Correto***
+
+    setwd("C:/Documentos/Trabalho de Bioestatística")    
+    setwd("C:\\Documentos\\Trabalho de Bioestatística")  
+
+***Errado***
+
+    setwd("C:\Documentos\Trabalho de Bioestatística")
+
+### **Banco de Dados**
+
+Os bancos de dados podem ser escritos em planilha Excel (formato .xls ou .xlsx), no Bloco de Notas (formato .txt) ou salvos em softwares de análise estatística (ex.: arquivos do SAS, .sav do SPSS e .RData do R) e outros formatos (.dbc e .dbf utilizado pelo Datasus). Para que o R consiga ler o banco de dados, é necessário importar estes arquivos.
+
+Trataremos neste momento sobre a importação de bancos de dados em arquivos nos formatos: .xls, .xlsx, .txt e .csv. , tanto no R Commander como no R-Studio utilizando a interface de apontar e clicar, e também linhas de comando.
+
+O procedimento no R Commander está detalhado nas páginas 7 a 13 da [apostila](https://drive.google.com/file/d/1fCjMVmPKj85OReErWluQm0VD0oYC63Z7/view?usp=sharing).
+
+### **Importando um banco de dados no formato XLS E XLSX**
+ 
+O arquivo utilizado nos exemplos a seguir podem ser localizado neste [link](https://github.com/LeticiaVicente/LSVAplic/blob/master/Hiperdia.xlsx?raw=true).
+
+#### **No R Commander**
+
+Primeiramente abra o RCommander. Você pode abrir de duas maneiras:  
+   + Digitando no R console ```library(Rcmdr)``` ou ```require(Rcmdr)```  
+   + Abrir pela barra de tarefas **Pacotes  &#8594; Carregar Pacotes  &#8594; localizar o *Rcmdr* &#8594; Dê Ok!**  
+
+Para importar o arquivo de dados *.xlsx* ou *.xls* com o R Commander, façamos o seguinte:
+
+1. Na barra de ferramentas da janela R Commander, vá em:  
+ **Dados  &#8594; Importar arquivos de dados  &#8594; do arquivo Excel.**  
+2. Dê um nome para o seu conjunto de dados (sem utilizar espaço e de preferência todo em minúsculo e sen acento) e clique em <u>**OK**</u>
+3. Procure o arquivo e dê duplo clique nele
+4. Selecione o nome da planilha na qual está o conjunto de dados e clique em OK
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Rcmdr_Carregando_xlsx.gif?raw=true")
+```
+
+#### **No R Studio**
+
+No R Studio podemos utilizar o menu *File* ou o painel no canto superior direito, na guia *Environment*.
+
+1. No menu localize **File &#8594; Import Dataset &#8594; From Excel**
+2. Uma nova janela vai abrir. Nesse local você pode alterar o nome do banco e escolher o separador dos dados
+3. Após configurar, no canto inferior direito vai estar uma prévia de como está configurado o banco
+4. Se estiver tudo certo pressione Ok e o banco será carregado
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/RStudio_Carregando_xlsx.gif?raw=true")
+```
+
+O Procedimento ainda pode ser realizado por linha de comando, utilizando a biblioteca *readxl*:
+
+    library(readxl)
+    nome_do_bjeto <-read_excel("nome_arquivo.xls",sheet = "nome_planilha")
+
+*Exemplo* 
+
+    library(readxl)
+    hiperdia <-read_excel("C:/Documentos/Trabalho de Bioestatística/Hiperdia.xls",sheet = "Hiperdia")
+
+Se o arquivo estiver no diretório de trabalho:
+
+    library(readxl)
+    hiperdia <-read_excel("Hiperdia.xls",sheet = "Hiperdia")
+
+### **Importando um Banco de Dados no formato TXT ou CSV**
+
+Não é raro encontrarmos conjuntos de dados salvos no formato .txt ou no formato .csv. Apesar de programas de planilha eletrônica como o MS Excel terem suporte para abrir arquivos com estas extensões, a forma de importação para o R é diferente daquela explicada anteriormente. Os dados em .txt e .csv são arquivos de texto em que as colunas são separadas por algum delimitador. Observe como é a estrutura de uma arquivo *.csv* aberto no bloco de notas:
+
+```{r, echo=FALSE, out.width = '75%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/CSVBlocodeNotas.png?raw=true")
+```
+
+O arquivo utilizado nos exemplos a seguir pode ser localizado neste [link](https://github.com/LeticiaVicente/LSVAplic/blob/master/Hiperdia.csv?raw=true)  
+
+#### **R Commander**
+
+Com o R Commander aberto, siga o passo a passo:
+
+1. Na barra de ferramentas da janela R Commander, vá em: **Dados  &#8594; Importar arquivos de dados  &#8594; de arquivo texto, clipboard ou URL**
+2. Dê um nome para o seu conjunto de dados (não utilize espaço).
+3. Nome das variáveis no arquivo: deixe marcado (recomendado). Isto indica que a primeira linha do arquivo se refere aos nomes das variáveis.
+4. Símbolo para dados faltantes: mantenha NA (recomendado).
+5. Localização do Arquivo de dados: mantenha em Sistema de Arquivos Local.
+6. Para preencher corretamente os campos “Separador de campos” e “Separador de decimais”, abra o arquivo que contém o conjunto de dados com o Bloco de Notas e verifique qual o símbolo utilizado para separar os campos e qual símbolo utilizado para separador de casa decimal. Após a verificação, feche-o. Os separadores mais comuns são ```,``` (vírgula) e ```;``` (ponto e vígula).
+7. Clique em OK e procure o arquivo para concluir a importação.
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Rcmdr_Carregando_csv.gif?raw=true")
+```
+
+#### **No R Studio**
+
+No R Studio podemos utilizar o menu *File* ou painel no canto superior direito, na guia *Environment*.
+
+1. No menu localize: **File &#8594;Import Dataset &#8594;From Text(base)**
+2. Uma nova janela vai abrir. Nesse local você pode alterar o nome do banco e escolher o separador dos dados.
+3. Apos configurar, no canto inferior direito vai estar uma prévia de como está configurado o banco.
+4. Se estiver tudo certo pressione Ok e o banco será carregado.
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/RStudio_Carregando_csv.gif?raw=true")
+```
+
+O Procedimento ainda pode ser realizado por *linha de comando no R-Studio*:
+
+    nome_do_objeto_sem_espaço <-read.csv2("local e nome do arquivo", header = T, sep = "separador", dec = "separador decimal")
+
+*Exemplo:*
+
+    hiperdia <- read.csv2("C:/Documentos/Trabalho de Bioestatística/Hiperdia.csv", header = T, sep = ";", dec = ",")
+
+Se o arquivo do banco de dados estiver no diretório de trabalho, basta utilizar o nome do arquivo:
+
+    hiperdia <- read.csv2("Hiperdia.csv", header = T, sep = ";", dec = ",")
+
+### **Carregando Banco de dados RData**
+
+O arquivo RData utilizado nos exemplos a seguir pode ser localizado neste [link](https://github.com/LeticiaVicente/LSVAplic/blob/master/hiperdia.RData?raw=true). O passo a passo sobre como carregar arquivos RData no R Commander pode ser visto na apostila anteriormente apresentada, na página 15.
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Rcmdr_Carregando_RData.gif?raw=true")
+```
+
+#### **Carregando Banco de dados RData no RStudio**
+
+Para Carregar o Banco de Dados no RStudio podemos seguir qualquer um dos 3 passos a seguir:
+
++ Pela janela *“File”* -> Navegar até *"Open File..."* -> Localizar e Clicar no arquivo RData -> Selecionar *OK*  -> Confirme com *"Yes"* na janela que abrir
+
++ Em *“Environment”*. clicar na “pastinha” -> Navegar até o arquivo -> Selecionar o arquivo RData -> Selecionar *OK*  -> Confirme com *"Yes"* na janela que abrir
+
++ Utilizando linha de comando. Chamar a atenção para o fato de que o comando aparece nos dois exemplos anteriores no Console 
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/RStudio_Carregando_RData.gif?raw=true")
+```
+
+Para carregar o RData por linhas de comando utilizando o comando ```load("C:/Diretorio/nome_arquivo.RData")```
+
+*Exemplo:*
+
+    load("C:/Documentos/Trabalho de Bioestatística/hiperdia.RData")
+
+### **No RStudio Cloud**
+
+O RStudio Cloud tem uma interface bem parecida com o RStudio, no entanto é necessário fazer o upload do RData. No botão *“Upload”* na guia *“File”*, localizado no canto inferior a direita.  
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/RCloud_Carregando_RData.gif?raw=true")
+```
+
+## **Introdução à Linguagem R**
+
+R é uma linguagem de programação voltada para análises de dados, estatística, mineração de dados, *machine learning*, entre outros, sendo uma plataforma *open source* e gratuita. Esse software nos permite fazer a análise estatística, bem como criar bancos de dados, e até mesmo montar sites, aplicativos (essa plataforma mesma foi criada no R Markdown), livros (Bookdown) entre outros.
+
+Agora, vamos botar a mão na massa! A seguir você terá uma noção básica da linguagem R. Sempre que houver um campo aberto marcado com a letra *"R"* no canto superior esquerdo como este a seguir, você poderá digitar um comando e clicar em **Run Code** para obter o resultado do seu código de programação. Caso tenha alguma dúvida, ou precise de uma ajuda, clique no botão **Hint**, e você poderá ter acesso a dicas sobre o comando que deverá utilizar.
+
+Em alguns casos, você deverá responder a um exercício, é para dar a sua resposta clique em **Submit Answer**. Fique atento, pois um balão verde indicará que seu comando foi correto e um balão vermelho indicará que há algo errado. Mas não desista, você pode repetir e submeter a resposta quantas vezes desejar! Não gostou do seu código e deseja reiniciar? Sem problemas, clique em **Start Over**.
+
+### **Sintaxe Básica do R**
+
+Não utilizaremos muito esta abordagem ao longo da disciplina, fique tranquilx! Esta é apenas uma introdução básica à linguagem R. Estamos interessados mesmo em implementar as análises de dados utilizando este poderoso Software!
+
+Contudo, para aprendermos uma linguagem, começamos devagar: primeiro as sílabas, depois juntamos estas sílabas em palavras e em seguida formamos frases curtas até conseguirmos aprender a compor um parágrafo, não é mesmo?
+
+Vamos começar do princípio! O R funciona como uma calculadora, e você pode fazer todas as operações que desejar. Comece realizando uma soma de ```5+5```.
+
+```{r soma, exercise=TRUE}
+
+```
+
+```{r soma-hint}
+5+5
+```
+
+```{r soma-check}
+5+5
+checa_codigo()
+```
+
+Os operadores básicos no R são:
+
+ + ```+``` para soma
+ + ```-``` para subtração
+ + ```*``` para multiplicação
+ + ```/``` para divisão
+
+Você pode utilizar também os ```()``` ou ```{}```  para organizar uma equação, quando necessário.
+ 
+Você também pode gerar intervalo de valores ou conjunto de valores. Para intervalos, utilize a estrutura ```numero_inicial:numero_final```. Para gerar um intervalo de 3 a 12, basta utilizar o comando:
+
+```{r int, exercise=TRUE}
+3:12
+```
+
+Responda a seguir como gerar um intervalo de **2** a **6**:
+
+```{r intexer, exercise=TRUE}
+
+```
+
+```{r intexer-hint}
+A resposta é 2:6
+```
+
+```{r intexer-check}
+2:6
+checa_codigo()
+```
+
+Para conjuntos de valores utilizamos ```c(valor,valor2,valor3,valor4, ..., valorn)```. Logo, para gerar um conjunto formado pelos números **3, 4, 6 e 9**, utilizamos o comando:
+
+```{r conj, exercise=TRUE}
+c(3,4,6,9)
+```
+
+Qual seria o comando para gerar um conjunto com os números **2, 4 e 10**?
+
+```{r conjexer, exercise=TRUE}
+
+```
+
+```{r conjexer-hint}
+A resposta é c(2,4,10)
+```
+
+```{r conjexer-check}
+c(2,4,10)
+checa_codigo()
+```
+
+No R não estamos restritos a dados numéricos. Veremos isto com calma mais adiante. Além de números, podemos ter **datas**, **um texto ou caracter** entre outros. Geralmente, quando queremos criar um dado do tipo **texto ou caracter**, colocamos esta informação entre aspas ```""```, assim ```"texto"```. Podemos utilizar a abordagem que acabamos de apresentar para formar conjuntos de texto. Para formar um conjunto composto pelo sexo de 6 indivíduos, podemos utilizar o comando:
+
+```{r text, echo=TRUE, exercise=TRUE}
+c("Masculino","Masculino","Feminino","Masculino","Feminino","Feminino")
+```
+
+Além disto, podemos alocar estes conjuntos e intervalos que criamos em **objetos**. Desta maneira, podemos "guardar" aquela informação que acabamos de digitar. Para tanto, utilizamos  
+
+    nome_objeto<-c(valor,valor2,valor3,valor4, ..., valorn) 
+    ou então                     
+    nome_objeto=(valor,valor2,valor3,valor4, ..., valorn)```.
+
+Vamos criar um objeto chamado "sexo" com o sexo dos indivíduos criados acima? Basta usar o comando:
+
+```{r textobj, echo=TRUE, exercise=TRUE}
+sexo <- c("Masculino","Masculino","Feminino","Masculino","Feminino","Feminino")
+```
+
+Ou então:
+
+```{r textobj1, echo=TRUE}
+sexo=c("Masculino","Masculino","Feminino","Masculino","Feminino","Feminino")
+```
+
+```{r textobj1-prep, include=F}
+sexo <- c("Masculino","Masculino","Feminino","Masculino","Feminino","Feminino")
+```
+
+**ATENÇÃO:** O R distingue maiúsculos e minúsculos. Por isto, sempre que criar um objeto, ou uma variável, fique atento ao nome que você dará a ele. Recomendamos criar objetos ou variáveis sempre com letras minúsculas e sem acento ou espaço. Mas esta é apenas uma recomendação, você verá a seguir que trabalharemos com um banco em que as variáveis começam com letra maiúscula.
+
+#### **Objeto**
+
+Sempre que carregamos um banco de dados e damos um nome a ele, estamos criando um *objeto* que contém as informações daquele banco de dados. Quando utilizamos o comando  
+
+    sexo <- c("Masculino","Masculino","Feminino","Masculino","Feminino","Feminino")
+
+criamos um objeto chamado **sexo**. Os objetos podem ser bancos de dados de diferentes tipos (**data.frame**, **data.table**, **tibble**) ou conter valores, listas, modelos, gráficos e outros. Inicialmente, vamos focar nos objetos de bancos de dados.
+
+Se Você está usando o *RStudio*, dever ter percebido que após carregar o banco de dados com o nome ***hiperdia***, ele apareceu em **data**, no canto superior direito, na guia *Environment*. O mesmo ocorre no *RStudioCloud*.
+
+<center>
+```{r, echo=FALSE, out.width = '75%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/InformacaoHiperdia.png?raw=true")
+```
+</center>
+
+Conforme podemos ver na imagem acima, o banco é composto por <u>*149 “obs.” of 9 “variables”*</u>. Lembramos que geralmente os bancos de dados são organizados em uma "planilha" em que cada coluna se refere a uma variável e cada linha a um elemento, ou unidade de observação. A primeira linha é utilizada para identificar as colunas, e não é contada como um elemento da base. Se clicarmos no nome da base uma aba será aberta, mostrando o banco de dados:
+
+<center>
+```{r, echo=FALSE, out.width = '80%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/tabelaExemplo.png?raw=true")
+```
+</center>
+
+Se clicarmos na setinha azul, ao lado do nome do objeto do banco de dados, teremos algumas informações sobre as variáveis deste banco:
+
+<center>
+```{r, echo=FALSE, out.width = '75%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/InformacaoHiperdia2.png?raw=true")
+```
+</center>
+
+As 9 colunas que compõem o banco são 9 variáveis de tipos distintos:  
+
++ “Esc” : grau de escolaridade do indivíduo, dividido em 4 níveis:  
+     . 0= sem estudo,   
+     . 1= ensino fundamental,   
+     . 2= ensino médio,  
+     . 3= ensino superior.  
++ “Renda” : corresponde ao número de salários mínimos que o indivíduo recebe de renda familiar por mês;
++ “Idade” : número de anos de vida;
++ “Sexo” : correspondente ao sexo biológico que possui ao nascer, Feminino ou Masculino;
++ “Hipertenso” : nesse caso é composto pelos números 1 e 0, sendo 1= ser [Hipertenso](https://saude.gov.br/saude*de-a-z/hipertensao "As pressões máxima e mínima são iguais ou ultrapassam os 140/90mmHg. A Hipertensão corresponde a níveis elevados da pressão sanguínea nas artérias."){.exclude} e 0= não ser hipertenso;
++ “Glicemia” : Valores medidos de [Glicemia](https://saude.gov.br/saude-de-a-z/diabetes "Para ser considerada em normalidade, a glicemia deve estar entre 70 mg e 150 mg. O diabetes pode causar o aumento da glicemia e as altas taxas podem levar a diversas complicações no organismo."){.exclude} em Jejum;
++ “ freq_ubs” : Número de visitas à UBS no ano;
++ “ Med_hip” : sobre a medicação, 1=caso faça uso de medicação para controle da Hipertensão e 0 = caso não faça o uso dessa medicação;
++ “ Med_dia” : sobre a medicação, 1=caso faça uso de medicação para controle da Diabetes e 0 = caso não faça o uso dessa medicação;
+
+Mas ainda temos mais algumas questões, o que seriam esses *“int”, “num”, “Factor”,* que aparecem ao lado das variáveis?
+
+<center>
+```{r, echo=FALSE, out.width = '5%', fig.align='right'}
+knitr::include_graphics("https://i.pinimg.com/originals/60/b8/40/60b8403e5bd1afde3c3f62f03973042b.png")
+```
+</center>
+
+Vamos ver mais a frente essa Explicação! Mas fica um *spoiler* de que esta informação está relacionado ao tipo de variável, que aprendemos na primeira aula da disciplina.
+
+**ATENÇÃO:** Diferente da imagem, a base utilizada nesta plataforma está alocada em um objeto com o nome ***hiperdia***. Vamos utilizar sempre este nome daqui para frente.
+
+### **Como se referir a um objeto?**
+
+Para nos referirmos a um objeto e verificar as informações alocadas no mesmo basta digitar o nome deste objeto. Então, Vamos ver o que há no banco **hiperdia**? Basta digitar o nome ```hiperdia``` do objeto e clicar em **Submit Answer** a seguir:
+
+```{r objeto, exercise=TRUE}
+
+```
+
+```{r objeto-hint}
+O nome do objeto é hiperdia
+```
+
+```{r objeto-check}
+hiperdia
+checa_codigo()
+```
+
+No canto inferior esquerdo há a informação *1-10 of 149 rows | 1-9 of 9 columns* o que indica que estamos vendo as 10 primeiras linhas de um total de de 149 e as 9 colunas. O R reconhece bancos de dados como *data.frame* (*banco de dados* em tradução livre do inglês) e podemos perguntar ao R se um objeto é um *data.frame* utilizando a função ```is.data.frame(nome_objeto)```. Identifique se o objeto hiperdia é um data.frame:
+
+```{r isdataframe, exercise=TRUE}
+
+```
+
+```{r isdataframe-hint}
+O comando é is.data.frame(hiperdia)
+```
+
+```{r isdataframe-check}
+is.data.frame(hiperdia)
+checa_codigo()
+```
+
+A resposta **[1] TRUE** indica que é sim, o objeto hiperdia é um *data.frame*.
+
+Outra maneir de identificar o tipo de objeto é utilizando a função ```class(nome_objeto)```:
+
+```{r class, exercise=TRUE}
+class(hiperdia)
+```
+
+#### **Como se referir a uma variável no banco de dados?**
+
+Existem diversas maneiras de se referir a uma variável em uma base de dados. Uma destas maneiras é utilizar a sintaxe ```nome_objeto$nome_variavel```. Para se referir à variável Sexo da base hiperdia, por exemplo, usamos o comando:
+
+```{r Exemplo_2, echo=TRUE}
+hiperdia$Sexo
+```
+
+Com este comando, podemos observar a informação do Sexo dos 149 indivíduos da base **hiperdia**. Agora, é sua vez! Como podemos obter as informações da variável *Glicemia* da base **hiperdia**?
+
+```{r exe_glic, exercise=TRUE}
+
+```
+
+```{r exe_glic-hint}
+O comando é hiperdia$Glicemia
+```
+
+```{r exe_glic-check}
+hiperdia$Glicemia
+checa_codigo()
+```
+
+#### **Como se referir a um subconjunto do banco de dados?**
+
+O banco de dados pode ser visto como uma “matriz” composta por linhas e colunas, onde cada linha é referente a uma unidade de observação, ou elemento, e cada coluna se refere a uma variável. Podemos nos referir a um subconjunto da base de dados, indicando linhas e colunas que desejamos observar utilizando colchetes ```[ ]``` após o nome do objeto, indicando, na ordem, as linhas e as colunas que desejamos. ```nome_objeto[linhas,colunas]```.
+
+Por Exemplo, para visualizar um subconjunto com a terceira variável (Idade) e as 5 primeiras linhas do banco hiperdia utilizamos o seguinte comando: 
+        
+```{r Exemplo_9, exercise=TRUE}
+hiperdia[1:5,3]
+```
+
+Nesse caso: 45, 42, 30, 30 e 45 são as idades dos cinco primeiros indivíduos localizados na parte superior do banco de dados.
+  
+Vamos acrescentar um pouco mais de informação na saída. Além de indicar um intervalo, como apresentado anteriormente por ```1:5```, é possível indicar conjuntos de valores intercalados. Para isso usaremos  ```c``` , que indica a concatenação dos valores das observações que estão localizadas dentro do parênteses ```( )```. Desta maneira para visualizar um subconjunto com a primeira, terceira e quinta variáveis (Escolaridade, Idade e Hipertensao) e as primeira, quarta, sexta e décima observações (linhas) do banco hiperdia, utilizamos o comando:
+  
+```{r Exemplo_10, echo=TRUE, exercise=TRUE}
+hiperdia[c(1,4,6,10),c(1,3,5)] 
+```
+
+Quando utilizamos o ```[ ]``` e desejamos obter as informações de todas as linhas ou de todas as colunas de uma base de dados não é necessário informar todo o intervalo de valores. Para tanto, basta não indicar o intervalo de colunas ou linhas. Desta maneira, para visualizar um subconjunto com as 5 primeiras observações de todas as variáveis do banco hiperdia, utilizamos o comando:
+  
+```{r Exemplo_11, exercise=TRUE}
+hiperdia[1:5,]
+
+```
+
+Agora é a sua vez! Qual o comando para observar as 10 primeiras linhas das 4 primeiras variáveis do banco?
+
+```{r sub, exercise=TRUE}
+
+```
+
+```{r sub-hint-1}
+Lembre-se, primeiro as linhas e depois as colunas!
+```
+
+```{r sub-hint-2}
+hiperdia[1:10,1:4]
+```
+
+```{r sub-check}
+hiperdia[1:10,1:4]
+checa_codigo()
+```
+
+Se você utilizou um caminho diferente do proposto acima, fique tranquilo. Existem diversas maneiras de se chegar a esta resposta. Alguns exemplos são:
+
+    hiperdia[c(1:10),c(1,2,3,4)]
+          
+    hiperdia[1:10,c(1,2,3,4)]
+          
+    hiperdia[c(1,2,3,4,5,6,7,8,9,10),c(1,2,3,4)]
+
+#### **Como se referir a um subconjunto de uma variável?**
+
+A mesma lógica aplicada na etapa anterior pode ser aplicada para a visualização das informações de uma dada variável para alguns elementos de ineteresse. Neste sentido, para mostrar as primeiras 10 observações da variável Sexo, utilizamos o comando:
+
+```{r Exemplo_13, exercise=TRUE}
+hiperdia$Sexo[1:10]
+```
+
+Note, que quando você se refere a uma variável, basta indicar quais observações deseja que seja mostrado uma vez que a coluna já está indicada pela variável.
+
+Agora responda, de que outra maneira poderia ser indicada as 10 primeiras observações da variável Sexo utilizando o procedimento apresentado anteriormente ```hiperdia[linhas_obs,número_variável]``` ? Lemvre-se que a variável Sexo é a 4ª coluna da base de dados...
+
+```{r subvar1, exercise=TRUE}
+
+```
+
+```{r subvar1-hint-1}
+Lembre-se, primeiro as linhas e depois as colunas!
+```
+
+```{r subvar1-hint-2}
+hiperdia[1:10,4]
+```
+
+```{r subvar1-check}
+hiperdia[1:10,4]
+checa_codigo()
+```
+
+#### **Teste Lógico**
+
+Em disversas situações iremos implementar **testes lógicos** durante a nossa programação em R. As aplicações deste tipo de teste são diversas, mas focaremos aqui em procdimentos para gerar subconjuntos de bancos de dados e parar gerar novas variáveis.
+
+Podemo traduzir um **teste lógico** como uma ***pergunta*** que faremos ao programa. Alguns exemplos:
+
+ + *Quais indivíduos da base hiperdia têm glicemia acima de 100mg/dl?*
+ + *Quais indivíduos da base hiperdia são do sexo masculino?*
+ + *Quais indivíduos da base hiperdia frequentam a UBS mais de 3 ou mais vezes ao ano?*
+ 
+A resposta para um teste lógico será sempre **TRUE** quando a resposta é **verdadeira ou positivo** e **FALSE** quando a resposta for **falsa ou negativa**.
+
+Vamos começar respondendo à primeira pergunta anterior: *Quais indivíduos da base hiperdia têm glicemia acima de 100mg/dl?*. Para isso, devemos nos referir à variável Glicemia e utilizar o operador ```>```: Para nos referir à variávei Glicemia utilizamos ```hiperdia$Glicemia``` e então procedemos o teste lógico ```hiperdia$Glicemia>100```
+
+```{r tl1, exercise=TRUE}
+hiperdia$Glicemia>100
+```
+
+Cada **TRUE** e **FALSE** apresentado é uma resposta ao teste lógico *A Glicemia é maior que 100?*. Desta maneira o primeiro e o segundo indivíduo da base **não têm** glicemia maior do que 100, enquanto o terceiro e o sexto **têm** glicemia maior do que 100.
+
+Esistem diversos operadores para aplicar testes lógicos, mas em todas as nossas atividades utilizaremos principalmente:
+
+ + ```==``` para igualdade
+ + ```>``` para maior
+ + ```<``` para menor
+ + ```>=``` para maior ou igual
+ + ```<=``` para menor ou igual
+ + ```!=``` para diferente
+ 
+Vamos responder às outras perguntas propostas anteriormente? Começando por *Quais indivíduos da base hiperdia são do sexo masculino?*
+
+```{r tl2, exercise=TRUE}
+
+```
+
+```{r tl2-hint-1}
+Para se referir à variável Sexo, utilize hiperdia$Sexo
+```
+
+```{r tl2-hint-2}
+O operador para igualdade é ==
+```
+
+```{r tl2-hint-3}
+Para se referir a uma categoria de um fator, represente-o entre aspas. Exemplo: "M"
+```
+
+```{r tl2-hint-4}
+hiperdia$Sexo=="M"
+```
+
+```{r tl2-check}
+hiperdia$Sexo=="M"
+checa_codigo()
+```
+
+Agora identifique *Quais indivíduos da base hiperdia frequentam a UBS mais de 3 ou mais vezes ao ano?*. Lembre-se que a variável que indica o número de visitas à UBS é **freq_ubs**.
+
+```{r tl3, exercise=TRUE}
+
+```
+
+```{r tl3-hint-1}
+Para se referir à variável freq_ubs, utilize hiperdia$freq_ubs
+```
+
+```{r tl3-hint-2}
+O operador para maior ou igual é >=
+```
+
+```{r tl3-hint-3}
+hiperdia$freq_ubs>=3
+```
+
+```{r tl3-check}
+hiperdia$freq_ubs>=3
+checa_codigo()
+```
+
+O interessante do teste lógico, é que podemos combiná-lo com a seleção de subconjunto do banco de dados e variáveis. Como vimos anteriormente, podemos utilizar ```nome_base[linhas,colunas]``` para selecionar apenas linhas e colunas de interesse na base de dados ou então ```nome_base$variável[linhas]``` para obter observações específicas de uma variável. É possível o argumento das **linhas** por um teste lógico, e selecionar apenas as linhas que cumpram um certo requisito.
+
+Para identificar o sexo dos indivíduos que frequentam a unidade básica de saúde (UBS) 9 ou mais vezes no ano utilizando a estrutura ```nome_base[linhas,colunas]```, sabendo que a variável *Sexo* é a quarta coluna:
+
+```{r tl4,exercise=TRUE}
+hiperdia[hiperdia$freq_ubs>=9,4]
+```
+
+Ou então, posso me utilizar o comando:
+
+```{r tl5,exercise=TRUE}
+hiperdia$Sexo[hiperdia$freq_ubs>=9]
+```
+
+Agora é sua vez! Obtenha o sexo dos indivídudos que têm glicemia maior do que 120:
+
+```{r tl6, exercise=TRUE}
+
+```
+
+```{r tl6-hint-1}
+Para se referir à variável Sexo, utilize hiperdia$Sexo e para se referir à variável Glicemia, utilize hiperdia$Glicemia
+```
+
+```{r tl6-hint-2}
+O operador para maior é >
+```
+
+```{r tl6-hint-3}
+hiperdia$Sexo[hiperdia$Glicemia>120]
+```
+
+```{r tl6-check}
+hiperdia$Sexo[hiperdia$Glicemia>120]
+checa_codigo()
+```
+
+#### **Criando uma variável no banco de dados**
+
+Em diversos momentos iremos criar variáveis no banco de dados. Na base hiperdia por exemplo, apesar da informação da glicemia, não temos a classificação dos indivíduos em diabéticos e não diabéticos, e esta pode ser uma variável importante de análise!
+
+Existem diversas maneiras de criar uma variável, e vamos abordar os procedimentos de maneira mais detalhada quando entrarmos em **preparo da base de dados**. Contudo, iremos apresentar o procedimento de maneira genérica.
+
+Relembrando o que vimos agora a pouco, para criar um objeto podemos utilizar a estrtura ```nome_objeto<-c(valor1,valor2,...,valorn)```e para criarmos uma variável, podemos utilizar uma estrtura semelhante: ```nome_base$nome_variavel<-valor```.
+
+Algumas considerações importantes sobre este comando é que se indicarmos o nome de uma variável que já existe em ```nome_base$nome_variavel``` esta variável terá todas as suas informações substituídas pelo valor indicado em ```<-valor```.
+
+Por exemplo, se fizer o comando ```hiperdia$Renda<-0``` e em seguida verificar a base hiperdia com ```hiperdia```, veja o que ocorre:
+
+```{r cvar, exercise=TRUE}
+hiperdia$Renda<-0
+hiperdia
+```
+
+Todos os valores da Renda foram substitídos por 0!
+
+Então, sempre que for criar uma variável desta maneira, verifique se o nome que está criando a variável existe ou não na base!
+
+É muito comum ao criarmos uma variáveis composta **NA** que indica que não há informação (```nome_base$nome_variavel<-NA```), e em seguida, preenchemos esses **NA** com as informações que desejamos, e podemos combinar este procedimento com **testes lógicos**!
+
+Mas como estamos apenas introduzindo este conceito, vamos praticar um pouco. Qual o comando utilizado para criar uma variável nomeada *diabetes* na base **hiperdia**, que será composta por **NA**?
+
+```{r cvar2, exercise=TRUE}
+
+```
+
+```{r cvar2-hint-1}
+Para criar a variável utilize nome_base$nome_variavel
+```
+
+```{r cvar2-hint-2}
+hiperdia$diabetes<-NA
+```
+
+```{r cvar2-check}
+hiperdia$diabetes<-NA
+checa_codigo()
+```
+
+### **Funções**
+
+Nós já utilizamos diversas funções nesta plataforma até o momento. Agora, vamos apresentá-las formalmente. Uma função é um conjunto de comandos organizados para realizar uma ação específica. A função **is.data.frame**, por exemplo, indica se o objeto é um *data.frame*, enquanto a função **read.csv2** importa um arquivo *.csv* para o R.
+
+Para aplicarmos uma função, utilizamos a estrutura ```função(argumentos)```.  Estes *argumentos* indicam os detalhes da ação que será realizada. Na função **load**, o principal argumento é o caminho e o nome do arquivo *.RData* que se deseja carregar, enquanto o principal argumaneto da função **is.data.frame** é o nome do objeto que desejamos saber se é um *data.frame*.
+
+Durante o curso, utilizaremos diversas funções. Sempre apresentaremos a função de maneira resumida, focando em sua aplicação. Contudo, no R, você pode ver todos os detalhes de uma função utilizando o *help* do R. No **RStudio**, você pode usar a guia **help** no canto inferior direito para procurar o nome da função que deseja os detalhes. Você também pode usar o comando ```?nome_da_função``` que será aberta a página de ajuda correspondente.
+
+A seguir, apresentaremos algumas funções básicas e muito importantes durante a utilização do R.
+
+#### **Função *str***
+
+Com essa função repondemos a questão: Como o R está reconhecendo os dados?
+
+A função **str** apresenta a estrutura dos dados (**str** do inglês **structure**) e tem como argumenro principal o nome do objeto que deseja conhecer a estrutura: ```str(nome_da_base)```. Aplicando esta função vemos o tipo de objeto a quantidade de linhas e colunas, a apresentação nominal das variáveis presentes no banco e como o R as reconhece ("character" quando se refere a um texto, "factor" que indica que aquela é uma variável categórica (qualitativa), "numeric", ou "integer" indicando que a variável é numérica).
+
+Agora, aplique a função **str** na base **hiperdia**:
+  
+```{r str, exercise=TRUE}
+
+```
+
+```{r str-hint-1}
+Lembre-se da estrutura: str(nome_da_base)
+```
+
+```{r str-hint-2}
+str(hiperdia)
+```
+
+```{r str-check}
+str(hiperdia)
+checa_codigo()
+```
+
+Com base no resultado acima, responda a questão a seguir:
+
+```{r letter-a, echo=FALSE}
+question("Qual destas variáveis da base hiperdia o R está reconhecendo como categórica (qualitativa)?",
+  answer("Escolaridade - Esc"),
+  answer("Sexo", correct=TRUE),
+  answer("Hipertenso"),
+  answer("Renda")
+)
+```
+
+#### **Função *table***
+
+Com a função *table* obtemos uma distribuição da frequência absoluta de uma ou mais variáveis. O principal argumento da função table é a variável que se deseja obter a distribuição:```table(banco$variável)```. Lembre-se que para se referir a uma variável, utilizamos a estrutura ```banco$variável```.
+
+Desta maneira, para sabermos quantos indivíduos são hipertensos na base **hiperdia**, utilizamos o comando:
+
+```{r Exemplo_18, echo=TRUE, warning=F, exercise=T}
+table(hiperdia$Hipertenso)
+```
+
+De acordo com as informação da resposta, temos que  56 indivíduos não são hipertensos, enquanto 93 são hipertensos, visto que, nesse caso, a variável é composta pelos números 1 e 0, sendo *1 = ser hipertenso* e *0 = não ser hipertenso*.  
+
+Podemos também cruzar as informações de mais de uma variável. Basta separar as variáveis por vírgula:
+
+```{r Exemplo_19, echo=TRUE, warning=F, exercise=T}
+table(hiperdia$Hipertenso,hiperdia$Sexo)
+```
+
+Nesse caso, vemos que 50 indivíduos do sexo feminino são hipertensos, enquanto 43 do sexo masculino apresentam hipertensão.  
+
+Qual o comando devemos utilizar para identificar a distribuição de frequência da variável *Med_hip*, que indica se o indivíduo utiliza ou não medicamento para controle da hipertensão?
+
+```{r table, exercise=TRUE}
+
+```
+
+```{r table-hint-1}
+Lembre-se da estrutura: table(base$variavel)
+```
+
+```{r table-hint-2}
+table(hiperdia$Med_hip)
+```
+
+```{r table-check}
+table(hiperdia$Med_hip)
+checa_codigo()
+```
+
+Com base no resultado acima, responda a questão a seguir:
+
+```{r letter-b, echo=FALSE}
+question("Quantos indivíduos fazem uso de medicamento para controle da hipertensão na base hiperdia? Lembre-se que 1 indica que o indivíduo faz uso do medicamento.",
+  answer("107", correct = TRUE),
+  answer("42"),
+  answer("149"),
+  answer("75")
+)
+```
+
+Podemos também combinar o comando *table* com *teste lógico*, para verificar a distribuição de frequência de uma variável, com base em uma condição. Se quisermos obter a distribuição de frequência  do sexo de indivíduos que usam medicamento para controle da hipertensão, podemos utilizar o comando:
+
+```{r tab_log, echo=TRUE, warning=F, exercise=T}
+table(hiperdia$Sexo[hiperdia$Med_hip==1])
+```
+
+```{r letter-a2, echo=FALSE}
+question("Quantos homens e quantas mulheres fazem uso de medicamentos para controle da hipertensão, respectivamene?",
+  answer("59 e 48"),
+  answer("77 e 12"),
+  answer("39 e 36"),
+  answer("48 e 59", correct = TRUE)
+)
+```
+
+Qual o comando devemos utilizar para identificar a distribuição de frequência da variável *Med_dia* entre as mulheres?
+
+```{r tablelog, exercise=TRUE}
+
+```
+
+```{r tablelog-hint-1}
+Lembre-se da estrutura: table(base$variavel[teste logico])
+```
+
+```{r tablelog-hint-2}
+Para se referir a variável Med_dia, utilize hiperdia$Med_dia, e para se referir a variável Sexo, utilize hiperdia$Sexo
+```
+
+```{r tablelog-hint-3}
+O teste operado do teste lógico para igualdade é ==
+```
+
+```{r tablelog-hint-4}
+Lembre-se de usar aspas ao indicar o sexo: "F"
+```
+
+```{r tablelog-hint-5}
+table(hiperdia$Med_dia[hiperdia$Sexo=="F"])
+```
+
+```{r tablelog-check}
+table(hiperdia$Med_dia[hiperdia$Sexo=="F"])
+checa_codigo()
+```
+
+Agora responda:
+
+```{r letter-a3, echo=FALSE}
+question("Quantas mulheres fazem uso de medicamentos para controle da diabetes?",
+  answer("42"),
+  answer("27"),
+  answer("39", correct = TRUE),
+  answer("53")
+)
+```
+
+Até o momento, fizemos uma introdução da linguagem R. Ao longo desta plataforma e durante o curso você poderá utilizar comandos similares para preparar sua base de dados e realizar algumas análises! Agora vamos nos aprofundar no preparo da base de dados usando R! Clique em **Next Topic**!
+
+### **Tipos de Variáveis**
+
+Vamos voltar a uma pergunta que fizemos anteriormente "O que são as expressões *“int”, “num”, “Factor”,* que aparecem ao lado das variáveis quando clicamos na setinha azul do lado do nome da base?  
+
+Essas são informações atribuidas às variáveis ao serem importadas para o R e expressam as diferentes maneiras que o R reconhece uma variável.
+
+### **Tipos de Variáveis no R**   
+
+Os tipos de variáveis mais comuns em um banco de dados no R são: *"Character", "Factor", "Numeric"* e *"Integer"*. Cada um desses tipos possui características próprias. Inicialmente, antes de explicar cada uma delas vamos relembrar um pouco a classificação das variáveis:
+
+As variáveis pode ser **quantitativas** ou **qualitativas**. Variáveis **quantitativas** são representadas por números com os quais podemos realizar operações, como soma, divisão e multiplicação, enquanto variáveis **qualitativas** representam características não quantificáveis e geralmente são expressas em categorias.
+
+1) As variáveis qualitativas (ou categóricas): representam caractísticas não quantificáveis e geralmente são expressas em categorias, ou seja, representam uma classificação dos elemtentos quanto àquela característica, como por exemplo o sexo (Masculino ou Feminino), estado civil (Solteiro, Casado, Divorciado, Viúvo) e qualidade do atendimento (bom, regular ou ruim). AS variáveis qualitativas podem ser nominais ou ordinais.  
+  a) Variáveis nominais: os possíveis resultados não apresentam ordenação entre as categorias. Exemplos: sexo (masculino ou feminino), cor dos olhos, tabagismo (fumante ou não fumante), estado de saúde (doente ou sadio).
+  b) Variáveis ordinais: existe uma ordenação intrínseca entre as categorias. Exemplos: escolaridade (Sem Escolaridade, Ensino Fundamental, Ensino Médio, Ensino Superior ou Técnico e Pós-Graduação), estágio da doença (inicial, intermediário, terminal) e qualidade do atendimento (bom, regular ou ruim).  
+
+2) Já as quantitativas são aquelas que podem ser medidas em uma escala numérica, ou seja, apresentam valores numéricos que fazem sentido, como número residentes de um domicílio, número de filhos, número de visitas a UBS, renda familiar per capta, peso e altura. As variáveis quantitativas podem ser contínuas ou discretas:   
+  a) Variáveis discretas: seus possíveis valores podem ser listados, somente fazem sentido valores inteiros. Geralmente são o resultado de contagens. Exemplos: número de filhos, número de bactérias em uma placa de cultura, número de cigarros fumados por dia, anos de estudo completos.
+  b) Variáveis contínuas: pode assumir qualquer valor em um intervalo, são aquelas que valores fracionais fazem sentido. Usualmente são resultados de medidas de algum instrumento. Exemplos: peso (balança), altura (régua), tempo (relógio) e pressão arterial.
+  
+**Obs.:** Uma variável originalmente quantitativa pode ser coletada de forma qualitativa, mas isto pode gerar perda de informação.
+
+Agora que relembramos o que vimos em sala de aula, vamos aos 4 tipos mais comuns de variáveis no R:
+
++ ***"Character"*** (Caractere): É uma variável de texto, e geralmente é do grupo das <u>variáveis qualitativas</u>, pois descreve o nome ao padrão visto
++ ***"Factor"*** (Fator): são usados para representar categorias e indicam que a variável é reconhecida como <u>variável qualitativa</u> pelo R
++ ***"Numeric"*** (Numérico): São numéricas, podem ser tanto <u>variáveis quantitativa "contínuas" como "discretas"</u>
++ ***"Integer"*** (Inteiro): São inteiros, sendo gralmente definidas como <u>variáveis quantitativa discretas</u>
+
+**ATENÇÃO:** Em situações específicas pelo fato da variável ter sido registrada apenas com números inteiros, o R pode reconhecer uma variável quantitativa contínua como **integer**. Isso ocorre na base **hiperdia**, onde a variável *Glicemia*, quantitativa contínua por sua natureza, é reconhecida como **integer**.
+
+Um resumo dessas características pode ser encontrado no quadro abaixo:
+
+    Tipos de variáveis:
+       - Caractere (character): Geralmente Qualitativa. É importante transformá-la em fator para que o R a identifique como categórica.
+       - Fator (Factor) : Qualitativa. O R já a reconhece como categórica.
+       - Numérico (Numeric) : Quantitativa Contínua ou Discreta 
+       - Inteiro (Integer) : Geralmente Quantitativa Discreta
+
+A seguir, vamos conhecer alguns procedimentos para preparar uma base de dados para análise, como a criação e adequação de variáveis. Clique em **Next Topic** e vamos lá! 
+
+
+## **Preparo da Base de Dados**
+
+### **Criando Variáveis**
+
+No R é possível criar seu próprio banco de dados com variáveis geradas a partir de operações matemáticas, anotações e análises feitas no software. Além disso, durante o preparo das variáveis, muitas vezes, temos que indicar ao R o tipo correto de variável que estamos utilizando.
+
+Vimos anteriormente que para criarmos uma variável, utilizamos o símbolo  ```<-```  ou  ```=```. Os nomes das variáveis/colunas podem conter letras, números, pontos e sublinha (_), mas não podem iniciar com um número ou um ponto seguido de número. Também não é indicado o uso de espaço.
+
+Podemos observar as variáveis de uma base de dados utilizando o comando ```names(nome_base)```. Logo, para verificar os nomes das variáveis da base **hiperdia**:
+
+```{r Exemplo_15, exercise=T}
+names(hiperdia)
+```
+
+Geralmente os banco de dados vem com uma coluna identificadora, a qual indica qual o indivíduo que estamos observando. Este banco não contém uma coluna indicadora. Tente se referir à variável indicadora chamada *ID*:
+
+```{r Exemplo_00, exercise=T}
+hiperdia$ID
+```
+
+Observe que o resultado é **NULL**, o que indica **Nulo**, ou seja, não existe uma variável na base chamada *ID*.
+
+```{r Exemplo_01, exercise=T}
+str(hiperdia)
+```
+
+Como sabemos, a base tem **149** linhas. Podemos criar uma variável chamada **ID** que seja preenchida opor valores de 1 a 149. Desta maneira, o primeiro indivíduo da base será identificado com ID igual a 1, o segundo com ID igual a 2 etc. Já vimos que podemos criar um intervalo de valores no R utilizando ```primeiro_numero:ultimo_numero``` e que podemos criar uma variável com ```nome_base$nome_variavel<-valor``` . Logo, para criar uma variável **ID** que vai de 1 a 149, usamos o comando.
+
+```{r Exemplo_03, exercise=T}
+hiperdia$ID <- 1:149
+```
+
+```{r prep_hipe_ID, include=F}
+hiperdia$ID <- 1:149
+```
+
+Podemos verificar a criação da variável **ID** usando a função **str**, se lembra dela?
+
+```{r ver, exercise=T, exercise.setup="prep_hipe_ID"}
+str(hiperdia)
+```
+
+Assim criamos uma coluna identificadora onde enumeramos de 1 a 149 os indivíduos contidos no banco!
+
+Agora que vimos como criar uma variável podemos avançar para outras questões para preparar o banco de maneira correta.
+
+### **Renomeando Variáveis**
+
+Já vimos que podemos identificar os nomes das variáveis da base usando o comando ```names(nome_base)```. Se usarmos ```names(nome_base)[coluna]``` obteremos o nome de uma variável (coluna) em específico. Por exemplo, para acessarmos o nome da segunda variável:
+
+```{r ver_renda, exercise=T, exercise.setup="prep_hipe_ID"}
+names(hiperdia)[2]
+```
+
+Podemos usar esta abordagem para renomear a variável, se atribuirmos um texto entre aspas da seguinte maneira: ```names(nome_base)[coluna]<-"novo_nome"```. Ou seja, para renomearmos a varável *Renda* para *Renda_SM*, usamos o comando:
+
+```{r renome_renda, exercise=T, exercise.setup="prep_hipe_ID"}
+names(hiperdia)[2]<-"Renda_SM"
+```
+
+### **Transformando variáveis numéricas em fator (factor)**
+
+Você percebeu que a variável **Esc**, escolaridade está sendo reconhecida como sendo uma variável *"integer"*, ou seja, como uma variável numérica? Contudo, conforme indicado anteriormente, esta variável é qualitativa ordinal, onde **0="Sem Escolaridade Formal"**, **1="Ensino Fundamental"**, **2="Ensino Médio"** e , **3="Ensino Superior ou maior"**. Desta maneira, para que possa ser analisada corretamente pelo R, ela deve ser um ```factor```. Para criarmos um fator a partir de uma variável existente no banco, podemos utilziar a função ```factor```, que tem como estrutura básica  
+
+    factor(nome_base$nome_variavel, levels = c(categoria1, categoria2, categoria3,...,categorian), labels = c("legenda_categoria1", "legenda_categoria2", "legenda_categoria3",...,"legenda_categorian"))
+Ou seja, o argumento principal é a variável original, que será convertida para fator. O argumento ```levels``` indica quais valores da variável original, na ordem que você deseja , representam as categorias da variável quando se tornar um fator e em ```labels``` indicamos quais nomes (ou legendas) estas categorias receberão. Os argumentos ```levels``` e ```labels``` não são obrigatórios, mas recomenda-se utilizá-los.
+
+Então, para criar um fator a partir da variável *Esc* do banco **hiperdia**, utilizamos a seguinte estrutura  
+
+    factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior")) 
+  
+Primeiro, vamos ver como é a variável *Esc*:
+
+```{r Exemplo_0501, exercise=T, exercise.setup="prep_hipe_ID"}
+hiperdia$Esc
+```
+
+Agora, vamos transformá-la em um fator:
+
+```{r Exemplo_051, exercise=T, exercise.setup="prep_hipe_ID"}
+factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+```
+
+Diferente não é mesmo? Você percebeu que no lugar dos números, agora aparecem as categorias da variável Escolaridade, o que aqueles números representam? Isso quer dizer que criamos um fator e "traduzimos" aqueles números para as categorias!
+
+Contudo, ainda não adicionamos esta variável na base hiperdia... Lembre-se, para criar uma variável usamos a estrutura ```nome_base$nome_variavel<-valor```. Agora, podemos indicar como ```valor``` as categorias da Variável *Esc* transformadas em fator, que vimos anteriormente como fazer!
+
+Para fins didádicos vamos nomear a nova variável como *Esc_fat*.
+
+```{r Exemplo052, exercise=T,  exercise.setup="prep_hipe_ID"}
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+```
+
+```{r prep_hipe_ID_Esc_fat, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+```
+
+Agora, verifique se a variável *Esc_fat* foi criada e qual o seu tipo, utilizando a função **str**:
+
+```{r esc_fat_str, exercise=TRUE, exercise.setup="prep_hipe_ID_Esc_fat"}
+
+```
+
+```{r esc_fat_str-hint-1}
+Lembre-se da estrutura: str(nome_base)
+```
+
+```{r esc_fat_str-hint-2}
+str(hiperdia)
+```
+
+```{r esc_fat_str-check}
+str(hiperdia)
+checa_codigo()
+```
+
+Agora, é a sua vez de criar uma variável do tipo **fator** a partir de uma variável numérica da base! A variável *Med_hip* indica se o indivíduo faz uso de medicamento para controle da hipertensão quando seu valor é **1** e que o indivíduo não usa este tipo de medicamento quando seu valor é igual **0**.
+
+Substitua os **????** no comando abaixo, de maneira que você crie uma variável chamada *Med_hip_fat*, que será um fator da variável *Med_hip*, em que **0** representa **"Nao"** e **1** representa **"Sim"**:
+
+**ATENÇÃO:** Por questão de compatibilidade de *encoding* e para evitar erros, a categoria será **"Nao"**, sem o acento!
+
+```{r med_hip_cria, exercise=TRUE, exercise.setup="prep_hipe_ID_Esc_fat"}
+hiperdia$????<-factor(hiperdia$????,levels=c(0,1),labels=c("????","????"))
+```
+
+```{r med_hip_cria-hint-1}
+Para criar a nova variável, lembre-se da estrutura hiperdia$nome_variavel e o nome da nova variável será Med_hip_fat
+```
+
+```{r med_hip_cria-hint-2}
+A variável que será transformada em fator é hiperdia$Med_hip
+```
+
+```{r med_hip_cria-hint-3}
+As categorias devem ser "Nao" para 0 e "Sim" para 1
+```
+
+```{r med_hip_cria-hint-4}
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+```
+
+```{r med_hip_cria-check}
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+checa_codigo()
+```
+
+```{r prep_hipe_ID_Esc_fat_med_hip, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+```
+
+Para não esquecer da função **str**, vamos utilizá-la mais uma vez! Use o comando ```str``` na base **hiperdia** para verificar a criação da variável *Med_hip_fat*:
+
+```{r med_hip_cria_str, exercise=TRUE, exercise.setup="prep_hipe_ID_Esc_fat_med_hip"}
+
+```
+
+```{r med_hip_cria_str-hint-1}
+str(hiperdia)
+```
+
+```{r med_hip_cria_str-check}
+str(hiperdia)
+checa_codigo()
+```
+
+Agora, vamos lembrar de uma outra função que vimos anteriormente, a função ```table```. Verifique a distribuição de frequência da variável *Med_hip_fat* que você criou:
+
+```{r med_hip_cria_table, exercise=TRUE, exercise.setup="prep_hipe_ID_Esc_fat_med_hip"}
+
+```
+
+```{r med_hip_cria_table-hint-1}
+Lembre-se da estrutura: table(nome_base$variavel)
+```
+
+```{r med_hip_cria_table-hint-2}
+table(hiperdia$Med_hip_fat)
+```
+
+```{r med_hip_cria_table-check}
+table(hiperdia$Med_hip_fat)
+checa_codigo()
+```
+
+```{r letter-a4, echo=FALSE}
+question("Quantos indivíduos na base hiperdia fazem uso de medicamentos para controle da hipertensão?",
+  answer("42"),
+  answer("149"),
+  answer("107", correct = TRUE),
+  answer("1")
+)
+```
+
+Vamos aumentar o desafio! Agora é sua vez de criar uma variável fator, a partir de uma variável numérica sozinhx, desde o início! Crie uma variável fator chamada *Hipertenso_fat* (tem que ser assim, *Hipertenso_fat* com "H" maiúsculo"!) a partir da variável *Hipertenso*, em que **0** será chamado de **"Nao"** e **1** será chamado de **"Sim"** e 
+
+**ATENÇÃO:** Por questão de compatibilidade de *encoding* e para evitar erros, a categoria será **"Nao"**, sem o acento!
+
+Não se preocupe, se tiver dúvidas consulte todas as dicas em **Hints**:
+
+```{r hip_cria, exercise=TRUE, exercise.setup="prep_hipe_ID_Esc_fat_med_hip"}
+
+```
+
+```{r hip_cria-hint-1}
+Lembre-se da estrutura do comando: hiperdia$nome_nova_variavel<-factor(hiperdia$nome_variavel_origem,levels=c(0,1),labels=c("Nao","Sim"))
+```
+
+```{r hip_cria-hint-2}
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+```
+
+```{r hip_cria-check}
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+checa_codigo()
+```
+
+```{r prep_hip_fat, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+```
+
+Obtenha a distribuição de frequência da variável *Hipertenso_fat* que você criou e responda a questão a seguir:
+
+```{r hip_fat_table, exercise=TRUE, exercise.setup="prep_hip_fat"}
+
+```
+
+```{r hip_fat_table-hint-1}
+Lembre-se da estrutura: table(nome_base$variavel)
+```
+
+```{r hip_fat_table-hint-2}
+table(hiperdia$Hipertenso_fat)
+```
+
+```{r  hip_fat_table-check}
+table(hiperdia$Hipertenso_fat)
+checa_codigo()
+```
+
+```{r letter-a8, echo=FALSE}
+question("Quantos indivíduos na base hiperdia são hipertensos?",
+  answer("93", correct = TRUE),
+  answer("56"),
+  answer("12"),
+  answer("0")
+)
+```
+
+Você percebeu que ao usar o comando ```table``` acima, primeiro aparece a informação **"Nao"** e em seguida **"Sim"**? Isso ocorre porque ao definir os níveis da variável *Hipertenso_fat* no argumento ```levels```, primeiro informamos o **0** e em seguida o **1** (```levels=c(0,1)```).
+
+Para identificar a ordenação das categorias de uma variável fator você pode usar a função ```levels```, que tem como principal argumento a variável fator que se deseja identificar os níveis ```levels(nome_base$variável)```. Caso a variável não seja um fator, o resultado da função ```levels()``` será **NULL**.
+
+```{r hip_fat_lev, exercise=TRUE, exercise.setup="prep_hip_fat"}
+levels(hiperdia$Hipertenso_fat)
+```
+
+Agora, identifique a ordem das categorias da variável *Sexo* da base hiperdia: 
+
+```{r levels_sexo, exercise=TRUE, exercise.setup="prep_hip_fat"}
+
+```
+
+```{r levels_sexo-hint-1}
+Lembre-se da estrutura: levels(nome_base$variavel)
+```
+
+```{r levels_sexo-hint-2}
+levels(hiperdia$Sexo)
+```
+
+```{r  levels_sexo-check}
+levels(hiperdia$Sexo)
+checa_codigo()
+```
+
+Existem diversas maneiras de trocar os níveis de um fator. Uma delas é criar o fator a partir da variável numérica, alterando a ordem das categorias em ```levels=c(1,0)``` e das legendas ```labels=c("Sim","Nao")```:
+
+```{r hip_fat_ord, exercise=TRUE, exercise.setup="prep_hip_fat"}
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(1,0),labels=c("Sim","Nao"))
+table(hiperdia$Hipertenso_fat)
+```
+
+**ATENÇÃO**: Na abordagem acima é necessário alterar a ordem das categorias em ```levels``` e também das legendas em ```labels```, caso contrário a classificação ficará incorreta.
+
+Uma outra maneira para trocar a ordem dos níveis dos fatores é utilizando a função ```relevel``` que tem como argumentos a variável fator que se deseja alterar os níveis, e o nível que se deseja que seja a referência, ou o primeiro nível (que deve ser escrito entre aspas):   
+
+    relevel(nome_base$variavel,ref="categoria_referencia").
+
+Este é o comando para alterar a ordem das categorias da variável *Hipertenso_fat* utilizando a função ```relevel```, tornando a categoria "Sim" como a primeira:
+
+```{r relevel_hip, exercise=TRUE, exercise.setup="prep_hip_fat"}
+hiperdia$Hipertenso_fat<-relevel(hiperdia$Hipertenso_fat,ref = "Sim")
+levels(hiperdia$Hipertenso_fat)
+```
+
+#### **Calculando novas variáveis**
+
+O R também possibilita calcular novas variáveis a partir de variáveis já existentes no banco. Observem que a variável *Renda* na base **hiperdia** representa a Renda familiar em Salários Mínimos, variando de 1.95 a 30.95. Podemos obter uma variável que represente a Renda em reais, de acordo com o salário mínimo vigente. Para tanto, basta multiplicar a variável *Renda* pelo valor do salário mínimo (em 2020 considere R$ 1.045,00).
+
+Já vimos que o R realiza operações matemáticas, e que o operador de multiplicação é ```*``` e também sabemos que para nos referirmos a uma variável, utilizamos ```nome_base$variavel```. Logo, para calcular a renda dos indivíduos da base hiperdia em reais, utilizamos o comando:
+
+```{r rend, exercise=TRUE, exercise.setup="prep_hip_fat"}
+hiperdia$Renda*1045
+```
+
+Estes são os valores da renda familiar em reais. Agora responda à questão a seguir:
+
+```{r letter-a5, echo=FALSE}
+question("Utilizando o comando acima, foi criada alguma variável na base hiperdia?",
+  answer("Nao", correct = TRUE),
+  answer("Sim")
+)
+```
+
+Para criar uma variável é necessário usar o comando ```nome_base$variável<-valor```. Qual o comando para criar uma variável chamada *Renda_real* (A variável tem que ter este nome *Renda_real*, com "R" maiúsculo), a partir da variável *Renda* da base **hiperdia**:
+
+```{r cria_renda, exercise=TRUE, exercise.setup="prep_hip_fat"}
+
+```
+
+```{r cria_renda-hint-1}
+Lembre-se da estrutura: nome_base$variavel<-valor
+```
+
+```{r cria_renda-hint-2}
+Para obter o valor, multiplique a variável Renda por 1045: hiperdia$Renda*1045
+```
+
+```{r cria_renda-hint-3}
+hiperdia$Renda_real<-hiperdia$Renda*1045
+```
+
+```{r cria_renda-check}
+hiperdia$Renda_real<-hiperdia$Renda*1045
+checa_codigo()
+```
+
+```{r prep_renda, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Renda_real<-hiperdia$Renda*1045
+```
+
+Utilize a função ```str``` e verifique a criação da variável *Renda_real*:
+
+```{r cria_renda_str, exercise=TRUE, exercise.setup="prep_renda"}
+
+```
+
+```{r cria_renda_str-hint-1}
+Lembre-se da estrutura: str(nome_base)
+```
+
+```{r cria_renda_str-hint-2}
+str(hiperdia)
+```
+
+```{r cria_renda_str-check}
+str(hiperdia)
+checa_codigo()
+```
+
+### **Criando variáveis categóricas (fator) a partir de intervalos de valores**
+
+Em algumas situações, temos o interesse de categorizar uma variável numérica, transformado-a em um uma variável qualitativa. Um exemplo é que podemos querer criar uma variável com a faixa etária dos indivíduos (0 a 19,20 a 39, 40 a 59, 60 ou mais) ou classificar estas faixas etárias (0 a 19 ser expresso por "criança e adolsecente", 20 a 39 por "adultos jovens", 40 a 59 por "adultos", 60 ou mais como "idosos"). Outro exemplo é que podemos Criar uma variável *Diabetico* na base **hiperdia** em que indivíduos com *Glicemia* maior do que 100 são classificados como "Sim" e indivíduos com *Glicemia* menor ou igual a 100 são classificados como "Nao".
+
+Mais uma vez, existem diversas maneiras de criar uma variável categórica a partir de um intervalo numérico. Aqui apresentaremos duas maneiras: uma utilizando a função ```cut``` e outra sem utilizar nenhuma função.
+
+A função ```cut``` tem como principais argumentos a variável numérica de onde os intervalos serão obtidos, ```breaks```, que se referem aos pontos de corte que definem os intervalos (por padrão fechados à direita), e ```labels``` para indicar as legendas destes intervalos:  
+
+    cut(nome_base$variavel,breaks=c(ponto_de_corte1,ponto_de_corte2,ponto_de_corte3,...,ponto_de_corten), labels=c("legenda_1","legenda_2","legenda_3",...,"legenda_n")) 
+      
+O argumento opcional ```right=FALSE``` indica que o intervalo será fechado à esquerda.
+
+**ATENÇÃO**: Os pontos de corte caracterizam os intervalos, logo, se indicarmos 3 pontos de corte em ```breaks``` nós teremos dois intervalos: por exemplo se indicarmos ```breaks=c(0,50,100)``` serão criados os intervalos (0,50],(50,100]. Caso o argumento ```right=FALSE```seja utilizado, teremos [0,50),[50,100).
+
+Você lembra de intervalo aberto e fechado? Se não, vamos relembrar: O intervalo fechado, representado por **[** ou **]**, indica que o intervalo contém aquele valor para o qual o intervalo está fechado, enquanto o intervalo aberto, representado por **(** ou **)**, indica que o intervalor não contém o valor para o qual o intervalo está aberto. Desta maneira, o intervalo **[0,50)** contém números que vão de 0, inclusive o próprio 0, pois o intervalo está fechado em **[0**, até o menor número antes de 50, mas não inclui o 50, pois o intervalo está aberto no **50)**, enquanto o intervalo **[50,100)** contém números que vão de 50, inclusive o próprio 50 por estar fechado em **[50**, até o menor número antes de 100, mas não inclui o 100 por estar aberto em **100)**.
+
+Agora, vamos aplicar a função **cut**. Desejamos criar uma variável chamada *Fx_etaria* que indique **"Adulto Jovem" se a idade é menor de 40 anos** e **"Adulto" se a idade é maior ou igual a 40**. Vamos começar vendo a variável *Idade*:
+
+```{r ver_id, exercise=TRUE, exercise.setup="prep_renda"}
+hiperdia$Idade
+```
+
+Como a variável *Idade* está em anos completos e varia de 20 a 50, desejamos identificar os intervalos **(0,39]** e **(39,50]**. Para isto, podemos indicar os pontos de corte ```breaks=c(0,39,100)```. Podemos utilizar 100 como último valor pois não há nenhum indivíduo que tenha idade superior a esta idade. Este será o comando para definir as categorias que definimos:
+
+```{r ver_id_cut, exercise=TRUE, exercise.setup="prep_hip_fat"}
+cut(hiperdia$Idade,breaks=c(0,39,100),labels=c("Adulto Jovem","Adulto"))
+```
+
+Perceba que o resultado do **cut** já é um fator! Por fim, para criarmos a variável *Fx_etaria* utilizamos:
+
+```{r cria_id_cut, exercise=T, exercise.setup="prep_hip_fat"}
+hiperdia$Fx_etaria<-cut(hiperdia$Idade,breaks=c(0,39,100),labels=c("Adulto Jovem","Adulto"))
+```
+
+```{r prep_id_cut, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Renda_real<-hiperdia$Renda*1045
+hiperdia$Fx_etaria<-cut(hiperdia$Idade,breaks=c(0,39,100),labels=c("Adulto Jovem","Adulto"))
+```
+
+Podemos conferir se criamos a variável corretamente cruzando as variáveis *Fx_etaria* e *Idade* utilizando a função ```table```:
+
+```{r tab_id_fx, exercise=TRUE, exercise.setup="prep_id_cut"}
+table(hiperdia$Fx_etaria,hiperdia$Idade)
+```
+
+Nas colunas temos as idades numéricase nas linhas a faixa etária que acabamos de criar. Então, temos 6 **Adulto Jovem** com 20 anos, 7 **Adulto Jovem** com 21 anos etc e nenhum (0) **Adulto** em idades até 39 anos, enquanto temos 2 **Adultos** com 40 anos, 4 **Adultos** com 41 anos, 9 **Adultos** com 43 anos etc. Desta maneira, verificamos que a 
+variável *Fx_etária* foi criada corretamente!
+
+Agora é a sua vez! Crie a variável *Renda_fat*, em que as categorias são **Até 2 SM** para indivíduos com *Renda* menor ou igual 2, **Mais de 2 a 5 SM** para indivíduos com *Renda* maior que 2 e menor ou igual a que 4 e **Mais que 5 SM** para indivíduos com renda maior 5:
+
+**DICA:** A Renda varia de 1,95 a 30,95 então os pontos de corte do ```break``` podem ser ```break=c(0,2,5,31)```
+
+```{r cria_renda_fat, exercise=TRUE, exercise.setup="prep_id_cut"}
+
+```
+
+```{r cria_renda_fat-hint-1}
+Lembre-se da estrutura: cut(nome_base$variavel,breaks=c(ponto_de_corte1,ponto_de_corte2,ponto_de_corte3,...,ponto_de_corten), labels=c("legenda_1","legenda_2","legenda_3",...,"legenda_n"))
+```
+
+```{r cria_renda_fat-hint-2}
+hiperdia$Renda_fat<-cut(hiperdia$Renda,breaks=c(0,2,5,31),labels=c("Até 2 SM","Mais de 2 a 5 SM", "Mais que 5 SM"))
+```
+
+```{r cria_renda_fat-check}
+hiperdia$Renda_fat<-cut(hiperdia$Renda,breaks=c(0,2,5,31),labels=c("Até 2 SM","Mais de 2 a 5 SM", "Mais que 5 SM"))
+checa_codigo()
+```
+
+```{r prep_renda_fat, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Renda_real<-hiperdia$Renda*1045
+hiperdia$Fx_etaria<-cut(hiperdia$Idade,breaks=c(0,39,100),labels=c("Adulto Jovem","Adulto"))
+hiperdia$Renda_fat<-cut(hiperdia$Renda,breaks=c(0,2,5,31),labels=c("Até 2 SM","Mais de 2 a 5 SM", "Mais que 5 SM"))
+```
+
+```{r letter-a6, echo=FALSE}
+question("Qual função você deve utilizar para identificar a distribuição de frequência da variável Renda_fat?",
+  answer("table", correct = TRUE)
+
+  )
+
+```
+
+Sim só temos uma opção, e é para não esquecer! Usamos a função ```table``` para obter a distribuição de frequências!
+
+Agora, utilize a função table na variável *Renda_fat*, e responda a pergunta a seguir:
+
+```{r table_renda_fat, exercise=TRUE, exercise.setup="prep_renda_fat"}
+
+```
+
+```{r letter-a7, echo=FALSE}
+question("Quantos indivíduos têm Renda Familiar de de 'Mais de 2 a 5 SM' na base hiperdia?",
+  answer("0"),
+  answer("1"),
+  answer("15", correct = TRUE),
+  answer("133")
+  )
+
+```
+
+Por fim, podemos criar uma variável categórica a partir de intervalos de valores utilizando teste lógico. São mais passos, mas é nessário apenas o uso da função ```factor```.
+
+Vamos criar a variável *Diabetes* na base **hiperdia** desta maneira. Nesta variável *Diabetes*, indivíduos com *Glicemia* menor que 100 serão identificados como **"Nao"** e indivíduos com *Glicemia* 100 ou maior serão classificados como **"Sim"**
+
+**ATENÇÃO:** Por questão de compatibilidade de *encoding* e para evitar erros, a categoria será **"Nao"**, sem o acento!
+
+```{r cria_dia, exercise=TRUE, exercise.setup="prep_renda_fat"}
+# Começamos criando a variável Diabetes, que receberá "Sim" em todas as suas linhas:
+hiperdia$Diabetes <- "Sim"
+
+# Em seguida, usamos o teste lógico dentro de [] para alocar "Nao" nos indivíduos com Glicemia menor do que 100
+hiperdia$Diabetes[hiperdia$Glicemia<100] <- "Nao"
+
+# Por fim, dizemos que Diabetes é um fator da variável Diabetes
+hiperdia$Diabetes <- factor(hiperdia$Diabetes)
+
+# Agora, é só conferir com o table:
+table(hiperdia$Diabetes,hiperdia$Glicemia)
+
+```
+
+```{r prep_dia, include=F}
+hiperdia$ID <- 1:149
+hiperdia$Esc_fat <- factor(hiperdia$Esc, levels = c(0,1,2,3), labels = c("Sem Escolaridade","Fundamental","Médio","Superior"))
+hiperdia$Med_hip_fat<-factor(hiperdia$Med_hip,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Hipertenso_fat<-factor(hiperdia$Hipertenso,levels=c(0,1),labels=c("Nao","Sim"))
+hiperdia$Renda_real<-hiperdia$Renda*1045
+hiperdia$Fx_etaria<-cut(hiperdia$Idade,breaks=c(0,39,100),labels=c("Adulto Jovem","Adulto"))
+hiperdia$Diabetes <- "Sim"
+hiperdia$Diabetes[hiperdia$Glicemia<100] <- "Nao"
+hiperdia$Diabetes <- factor(hiperdia$Diabetes)
+```
+
+Para fechar esta primeira parte, obtenha a distribuição de frequência da variável *Diabetes* e responda:
+
+```{r table_dia, exercise=TRUE, exercise.setup="prep_dia"}
+
+```
+
+```{r letter-a9, echo=FALSE}
+question("Quantos indivíduos têm Diabetes na base hiperdia?",
+  answer("76", correct = TRUE),
+  answer("72"),
+  answer("84"),
+  answer("56")
+  )
+
+```
+
+## **Exportando o banco de dados**
+
+Após o preparo da base de dados é interessante salvarmos a versão mais atualizada do mesmo, ou exportá-lo, para que não seja necessário realizar todo o preparo novamente.
+
+### **Exportando o banco em formato .csv ou .txt**
+
+Quando exportarmos dados, o formato mais comum, flexível e utilizado costuma ser o formato .csv que também pode ser aberto no nloco de notas.
+
+####	**No R Commander**
+
+ Assim como a importação de conjuntos de dados, o R Commander também possibilita a exportação de um conjunto de dados (para o formato .txt).
+
+1. Vá em **Dados  &#8594; Conjuntos de dados ativo  &#8594; Exportar conjunto de dados ativo**. 
+2. Feito isto, uma janela será aberta
+a. A primeira caixinha refere-se à inclusão do nome das variáveis no arquivo exportado (se a primeira linha da base contém os nomes das colunas)
+b. A segunda caixinha refere-se à inclusão do nome das linhas (coluna cinza à esquerda do conjunto de dados) no arquivo exportado. Geralmente desmarcamos esta opção
+c. A terceira caixinha menciona a inclusão de aspas em torno dos atributos das variáveis qualitativas (o que é recomendado)
+3. Clique em OK
+4 Crie um nome para seu arquivo e clique em salvar
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Exportando_Rcmdr.gif?raw=true")
+```
+
+#### **No RStudio e RStudio Cloud**
+
+No RStudio utilizamos a função ```write.table```, que tem como argumentos ```nome_objeto``` que indica o objeto que tem o banco a ser salvo, ```file```, que deve conter o nome do arquivo a ser salvo entre aspas e com a extensão desejada (.txt), ```sep``` que indica o símbulo separador das colunas e deve ser escrito entre aspas (usualmente usamos ";"), ```dec``` que indica o separador de casas decimais entre aspas (como padrão o R usa ".") e o argumento ```row.names``` que indica se os nomes das linahs devem sem salvos (recomendamos o uso de **=FALSE**).
+
+Desta maneira, para salvar a base **hiperdia** no formato **.txt** com as modificações, utilizamos o comando:
+
+```{r txt, exercise=TRUE, exercise.setup="prep_dia"}
+write.table(hiperdia,file="hiperdia.txt",sep = ";",dec = ".",row.names = F)
+```
+
+
+#### **No RStudio e RStudio Cloud**
+
+No RStudio utilizamos a função ```write.csv2```, que tem como argumentos ```nome_objeto``` que indica o objeto que tem o banco a ser salvo, ```file```, que deve conter o nome do arquivo a ser salvo entre aspas e com a extensão desejada (.csv), ```sep``` que indica o símbolo separador das colunas e deve ser escrito entre aspas (usualmente usamos ";"), ```dec``` que indica o separador de casas decimais entre aspas (como padrão o R usa ".") e o argumento ```row.names``` que indica se os nomes das linhas devem sem salvos (recomendamos o uso de **=FALSE**).
+
+Desta maneira, para salvar a base **hiperdia** no formato **.csv** com as modificações, utilizamos o comando:
+
+```{r csv, exercise=TRUE, exercise.setup="prep_dia"}
+write.csv2(hiperdia,file="hiperdia.csv",sep = ";",dec = ".",row.names = F)
+```
+
+### **Exportando o banco em formato próprio do R (RData)**
+
+O formato **.RData** é muito útil, pois além de mais leve manterá todas as características das variáveis que você acabou de alterar, sem o perigo de algo mudar ao importá-lo no futuro.
+
+####	**No R Commander**
+
+1. Com os dados abertos, vá em **"Arquivo"  &#8594; "Salvar Worksplace do R"**. 
+2. Feito isto, uma janela será aberta para localizar o diretório que será salvo
+3. Crie um nome para seu arquivo e clique em salvar
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("https://github.com/LeticiaVicente/LSVAplic/blob/master/Exportando_Rcmdr_RData.gif?raw=true")
+```
+
+#### **No RStudio e RStudio Cloud**
+
+No RStudio utilizamos a função ```save```, que tem como argumentos ```nome_objeto``` que indica o objeto que tem o banco a ser salvo e ```file```, que deve conter o nome do arquivo a ser salvo entre aspas e com a extensão desejada (.RData).
+
+Desta maneira, para salvar a base **hiperdia** no formato **.RData** com as modificações, utilizamos o comando:
+
+```{r save, exercise=TRUE, exercise.setup="prep_dia"}
+save(hiperdia,file="hiperdia.RData")
+```
+
+**ATENÇÃO:** O arquivo salvo vai direto para o diretório de trabalho ativo. Fique atento à alteração do diretório no início do trabalho. Você pode indicar o diretório onde o arquivo será salva no argumento ```file```, como por exemplo: ```save(hiperdia,file="C:/hiperdia.RData")```.
+
+
+## **O que aprendemos hoje**
+
+  * Aprendemos a instalar e como usar a interface do R e do RStudio;
+  * Vimos algumas sintaxes básicas
+  * Compreendemos um pouco sobre as informações do banco de dados Hiperdia
+  * Como criar uma variavel no R
+  * Como transformar numérica em fator
+  * Preparamos a base de dados
+  * Tipos de variáveis
+
+
+A seguir compartilho ainda o canal do youtube da professora do DMQ - UNIRIO, Letícia Raposo, bastante interessante para complementar o aprendizado: https://www.youtube.com/channel/UCFGJbW7aWOdj2iVluprCexA/  
+
+
+
+
+### **Referências**
+
+  MELO, Felipe Rafael Ribeiro. Introdução ao R Commander. Notas de Aula. Departamento de Métodos Quantitativos - UNIRIO. Rio de Janeiro - RJ, Brasil. 2019.  
+  FREIRE, S. M. 2020. Bioestatística Básica.
+http://www.lampada.uerj.br/arquivosdb/_book/bioestatisticaBasica.html  
+  BARBETTA, P. A. Estatística Aplicada às Ciências Sociais. Editora UFSC, 2015  
+  BUSSAB, W. O., MORETTIN, P. A. Estatística Básica. 6ª Ed. Editora Saraiva, 2010  
+
+  
+&nbsp;
+<hr />
+<center>
+> *„A teoria sem a prática vira 'verbalismo', assim como a prática sem teoria, vira ativismo. No entanto, quando se une a prática com a teoria tem-se a práxis, a ação criadora e modificadora da realidade.“*    —  Paulo Freire  
+
+</center>
+&nbsp;
+<hr />
+
+<p style="text-align: center;"> </p><p style="text-align: center;">**Bioestatística UNIRIO**</p>
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a title="Google+" class="fa fa-google-plus" target="_blank" id="uf_epicosocial13" href="https://classroom.google.com/"></a>
+</p>
+ 
+&nbsp;
+ 
+ 
